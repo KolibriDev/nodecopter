@@ -1,0 +1,48 @@
+@each $i in $breakArray {
+  .#{nth($i,1)}-show { display: none !important; }
+  .#{nth($i,1)}-hide { display: block !important; }
+
+  @include respond-to('#{nth($i,1)}-only') {
+    .#{nth($i,1)}-show { display: block !important; }
+    .#{nth($i,1)}-hide { display: none !important; }
+  }
+}
+
+.hide { display: none !important; }
+.block { display: block !important; }
+.inline { display: inline !important; }
+.inline-block { display: inline-block !important; }
+
+@include respond-to(large-only) {
+  .medium-show,
+  .small-show { display: none !important; }
+
+  .medium-hide,
+  .small-hide { display: block !important; }
+}
+
+
+@include respond-to(medium-only) {
+  .large-show,
+  .small-show { display: none !important; }
+
+  .large-hide,
+  .small-hide { display: block !important; }
+}
+
+@include respond-to(small-only) {
+  .large-show,
+  .medium-show { display: none !important; }
+
+  .large-hide,
+  .medium-hide { display: block !important; }
+}
+
+.medium-up-show {
+  display: none !important;
+  @include respond-to(medium){ display: block !important; }
+}
+.medium-up-hide {
+  display: block !important;
+  @include respond-to(medium){ display: none !important; }
+}

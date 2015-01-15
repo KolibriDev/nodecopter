@@ -1,0 +1,22 @@
+extends shared/_layout
+
+block content
+
+  section.section.light
+    row.no-gutter
+      column.medium-8: row
+        column(window-height='force:true')
+          div#dronestream
+          canvas#videoOverlay(width="640",height="360")
+        //- column: box.light(window-height='force:true,multiply:0.5')
+          h2 Staða flygildis
+          p
+            icon.circle.fa.fa-plug(drone-lost)
+            icon.circle.fa.fa-plane(drone-flying)
+          #output-state
+
+            p Staða rafhlöðu
+            .battery
+              .bar
+      column.medium-4: box.dark(window-height='force:true')
+        #right-output

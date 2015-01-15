@@ -1,0 +1,14 @@
+
+section {
+
+  @each $i in $colorArray {
+    &.#{nth($i,1)} {
+      background-color: nth($i,2);
+      color: nth($i,3);
+
+      @if lightness(nth($i,3)) > lightness(nth($i,2)) {
+        -webkit-font-smoothing: antialiased;
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+extends layouts/default
+
+block header
+  include home/welcome
+
+block content
+  include home/about
+
+block nav
+  include includes/nav
+
+block apis
+  include apis/bus
+  include apis/car
+  include apis/cinema
+  include apis/company
+  include apis/concerts
+  include apis/currency
+  include apis/cyclecounter
+  include apis/earthquake
+  include apis/flight
+  include apis/rides
+  include apis/lottery
+  include apis/particulates
+  include apis/weather
+  include apis/tv
+  include apis/sarschool
+
+block footer
+  .limit.padding
+    p Would you like to suggest a new endpoint to be implemented?<br/>Don't hesitate to <a href="mailto:apis@apis.is">contact us</a>, or contribute to our <a href="https://github.com/kristjanmik/apis" target="_blank">github repo</a>.

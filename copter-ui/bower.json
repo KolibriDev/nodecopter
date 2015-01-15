@@ -1,0 +1,60 @@
+{
+  "name": "docs-apis-is",
+  "homepage": "http://docs.apis.is",
+  "authors": [
+    "Benedikt D Valdez <benedikt@kolibri.is>",
+    "Olafur Nielsen <olafur@kolibri.is>"
+  ],
+  "description": "Documentation for the apis project",
+  "version": "1.1.0",
+  "author": {
+    "name": "Benedikt D Valdez",
+    "email": "hello@bdvs.info",
+    "url": "http://bdvs.info"
+  },
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "cress": "~0.7.5",
+    "normalize-scss": "~3.0.1",
+    "requirejs": "~2.1.14",
+    "requirejs-domready": "~2.0.1",
+    "modernizr": "~2.8.2",
+    "html5-polyfills": "*",
+    "jquery-easing": "*",
+    "underscore": "~1.7.0",
+    "requirejs-plugins": "~1.0.2"
+  },
+  "overrides": {
+    "cress": {
+      "ignore": true
+    },
+    "modernizr": {
+      "main": "./modernizr.js"
+    },
+    "html5-polyfills": {
+      "main": [
+        "./classList.js"
+      ]
+    },
+    "requirejs-domready": {
+      "main": "./domReady.js"
+    },
+    "jquery": {
+      "main": [
+        "./dist/jquery.min.js",
+        "./dist/jquery.min.map"
+      ]
+    },
+    "jquery-easing": {
+      "main": "jquery.easing.min.js"
+    },
+    "underscore": {
+      "main": [
+        "./underscore-min.js",
+        "./underscore-min.map"
+      ]
+    }
+  }
+}

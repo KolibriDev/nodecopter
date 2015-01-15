@@ -1,0 +1,31 @@
+{
+  "name": "nodecopter2015",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KolibriDev/nodecopter2015.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KolibriDev/nodecopter2015/issues"
+  },
+  "homepage": "https://github.com/KolibriDev/nodecopter2015",
+  "dependencies": {
+    "ar-drone": "^0.3.3",
+    "dronestatus": "^0.2.0",
+    "dronestream": "^1.1.1",
+    "express": "^3.19.0",
+    "nan": "1.3.0",
+    "opencv": "^1.0.0",
+    "q": "^1.1.2",
+    "socket.io": "^1.2.1",
+    "underscore": "^1.7.0",
+    "xbox-controller": "^0.5.0"
+  }
+}
