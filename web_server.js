@@ -3,30 +3,23 @@ var express = require('express'),
     path = require('path'),
     server = require("http").createServer(app);
 module.exports = function() {
-    app.configure(function() {
-        app.use(express.favicon());
-        app.use(express.logger('dev'));
-        app.use(app.router);
-        app.use(express.static(path.join(__dirname, 'public')));
-    });
+    app.use(express.static(path.join(__dirname, 'copter-ui/dev')));
 
-    app.configure('development', function() {
-        app.use(express.errorHandler());
-        app.locals.pretty = true;
-    });
+    // app.configure(function() {
+    //     app.use(express.favicon());
+    //     app.use(express.logger('dev'));
+    //     app.use(app.router);
+    // });
+
+    // app.configure('development', function() {
+    //     app.use(express.errorHandler());
+    //     app.locals.pretty = true;
+    // });
 
     app.get('/', function(req, res) {
-        res.redirect('http://localhost:1337');
+        console.log('sdasdas')
     });
-    server.listen(3000,function () {
-    	console.log('asdfasd');
-    });
+    server.listen(3000);
+
     return server;
 }
-
-
-
-
-
-
-

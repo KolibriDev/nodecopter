@@ -1,10 +1,13 @@
 var _ = require('underscore'),
+    Faced = require('../node_modules/faced/lib/faced'),
+    faced = new Faced(),
     gameOn = false,
-    cv = require('opencv'),
     talker = require('./talker'),
+    path = require('path'),
     imgCount = 0,
     excTime = 200,
     client, pngStream, socket;
+
 var findClosest = function(centerX, centerY, faces) {
     var a = _.chain(faces).sortBy(function(face) {
         // var faceSize = ((centerX * centerY) - (face.height * face.width)) * 0.01;
@@ -54,7 +57,6 @@ var makeMovement = function(commands) {
             }
             if (cmd == "lower") {
                 client.down(0.1);
-                
                 setTimeout(function() {
                     client.down(0);
                 }, excTime);
@@ -76,16 +78,19 @@ var findTheHumans = function(img, faces) {
     if (faces.length == 0) {
         console.log('noface');
     }
-    if (faces.length == 0 || LOCKED) return;
+    if (faces.length == 0 || LOCKED) {
+        // socket.emit('faces', []);
+        return;
+    }
     socket.emit('faces', faces);
     var commands = {};
-    var centerX = img.width() / 2;
-    var centerY = img.height() / 2;
+    var centerX = img.width / 2;
+    var centerY = img.height / 2;
     var offset = 100;
     var currentFace = findClosest(centerX, centerY, faces);
-    img.ellipse(currentFace.x + currentFace.width / 2, currentFace.y + currentFace.height / 2, currentFace.width / 2, currentFace.height / 2);
-    img.save('./dump/out' + imgCount + '.jpg');
-    imgCount++;
+    // img.ellipse(currentFace.x + currentFace.width / 2, currentFace.y + currentFace.height / 2, currentFace.width / 2, currentFace.height / 2);
+    // img.save('./dump/out' + imgCount + '.jpg');
+    // imgCount++;
 
     if (currentFace.height * currentFace.width < 20000) {
         commands.forward = true;
@@ -124,20 +129,55 @@ var findTheHumans = function(img, faces) {
 var gameIsOn = function(ison) {
     gameOn = ison;
 }
+var hrstart = process.hrtime();
 var handleStream = function(buffer) {
     if (gameOn) {
-        cv.readImage(buffer, function(err, im) {
-            if (err) {
-                console.log('CV Error: ', err);
-            }
-            im.detectObject(cv.FACE_CASCADE, {}, function(err, faces) {
-                findTheHumans(im, faces);
+        hrend = process.hrtime(hrstart);
+        if (hrend[0] >= 1) {
+            console.time("readimg")
+            faced.detect(buffer, function(faces, img, file) {
+                console.log()
+                if (faces.length > 0) {
+                    findTheHumans(img, faces);
+                }
+
             });
-        });
+            // findTheHumans(img, result);
+            // cv.readImage(buffer, function(err, im) {
+            //     if (err) {
+            //         console.log('CV Error: ', err);
+            //     }
+
+            //     im.detectObject(detectio_cascate, {
+            //         neighbors: 6,
+            //         min: [50, 50]
+            //     }, function(err, faces) {
+            //         if (faces.length > 0) {
+            //             im.detectObject(detectio_cascate2, {}, function(err, eye) {
+            //                 if (eye.length > 0) {
+            //                     findTheHumans(im, faces);
+            //                 }
+            //             });
+            //         }
+            //         findTheHumans(im, faces);
+            //     });
+
+            // });
+            // console.log('Found ' + result.length + ' faces.');
+
+            // for (var i = 0; i < result.length; i++) {
+            //     var face = result[i];
+            //     console.log(face);
+            // }
+            console.timeEnd("readimg")
+            hrstart = process.hrtime();
+            // hrend = process.hrtime(hrstart);
+            // console.log(hrend);
+        }
     }
 }
 gameIsOn.closest = findClosest;
-gameIsOn.setSocket = function (_socket) {
+gameIsOn.setSocket = function(_socket) {
     socket = _socket;
 }
 module.exports = function(_client, _pngStream) {
