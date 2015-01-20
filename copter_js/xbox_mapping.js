@@ -6,12 +6,9 @@ var XboxController = require('xbox-controller'),
     stickMaxNeg = -32768,
     triggerMax = 255,
     lightTouch = true;
-
+var calibrate = true;
 var setup = function() {
-    xbox.on('a:release', function(key) {
-        client.calibrate(0);
-        client.takeoff();
-    });
+
 
     xbox.on('b:release', function(key) {
         client.land();
@@ -23,7 +20,8 @@ var setup = function() {
     });
 
     xbox.on('x:release', function(key) {
-        client.disableEmergency();
+        calibrate = true;
+
     });
 
     // xbox.on('leftshoulder:release', function(key) {
@@ -40,7 +38,7 @@ var setup = function() {
 
     xbox.on('lefttrigger', function(position) {
         client.counterClockwise(position / triggerMax);
-        client.animate('flipLeft',750);
+        client.animate('flipLeft', 750);
     })
 
     xbox.on('righttrigger', function(position) {
@@ -48,6 +46,9 @@ var setup = function() {
     })
 
     xbox.on('left:move', function(position) {
+        if (calibrate) {
+            return;
+        }
         var normFront = 0,
             normLeft = 0,
             forwards = true,
@@ -84,12 +85,16 @@ var setup = function() {
             client.right(normLeft);
         }
     });
+    var hrstart = process.hrtime();
 
     xbox.on('right:move', function(position) {
         var normUp = 0;
         normRotateLeft = 0,
             up = true,
             left = true;
+        if (calibrate) {
+            return;
+        }
 
         if (position.y < 0) {
             normUp = position.y / stickMaxNeg;
@@ -105,7 +110,7 @@ var setup = function() {
 
             normRotateLeft = position.x / stickMaxPos;
         }
-
+        var hrend = process.hrtime(hrstart);
         if (normUp != 0) {
             if (lightTouch) normUp = normUp / 2;
             up ? client.up(normUp) : client.down(normUp);
@@ -115,12 +120,15 @@ var setup = function() {
         }
 
         if (normRotateLeft != 0) {
+            console.log(hrend, 'normRotateLeft', normRotateLeft / 2);
             if (lightTouch) normRotateLeft = normRotateLeft / 2;
             left ? client.clockwise(normRotateLeft) : client.counterClockwise(normRotateLeft);
         } else {
+            console.log(hrend, 'done');
             client.clockwise(normRotateLeft);
             client.counterClockwise(normRotateLeft);
         }
+        hrstart = process.hrtime();
     });
 
 
@@ -128,7 +136,16 @@ var setup = function() {
 }
 module.exports = function(_client) {
     client = _client;
-    // client.getPngStream().on('data', imageProccessing);
-    setup();
+    xbox.on('a:release', function(key) {
+        client.takeoff();
+        client.after(2000, function() {
+            console.log('start calibration');
+            client.calibrate(0);
+        }).after(5000, function() {
+            console.log('end calibration');
+            calibrate = false;
+            setup();
+        })
+    });
     return xbox;
 };
