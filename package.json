@@ -20,6 +20,7 @@
     "ar-drone": "^0.3.3",
     "dronestatus": "^0.2.0",
     "dronestream": "^1.1.1",
+    "dualshock-controller": "^0.6.7",
     "express": "^3.19.0",
     "nan": "^1.3.0",
     "opencv": "^1.0.0",
