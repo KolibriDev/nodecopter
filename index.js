@@ -1,5 +1,5 @@
 var arDrone = require('ar-drone'),
-    client = arDrone.createClient(),
+    client = arDrone.createClient({frameRate:2}),
     xbox = require('./copter_js/xbox_mapping')(client),
     say = require('./copter_js/say');
 

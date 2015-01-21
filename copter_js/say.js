@@ -4,6 +4,7 @@ var SOCKET;
 var say = function(text) {
     var deffered = Q.defer();
     var exc = spawn('say', [text, '-v', 'Vicki']);
+    console.log('-------'+text);
     if (SOCKET) {
         SOCKET.emit('say', text);
     }
