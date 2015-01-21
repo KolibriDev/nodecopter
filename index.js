@@ -3,17 +3,16 @@ var arDrone = require('ar-drone'),
     say = require('./copter_js/say'),
     pngStream = client.getPngStream(),
     videoStream = client.getVideoStream(),
-    findHumans = require('./copter_js/find_humans')(client, pngStream),
     twitterConf = require('./twitter.conf.json')
     twitter = require('./copter_js/twitter')(twitterConf),
-    // countHumans = require('./copter_js/count_humans')(pngStream),
+    findHumans = require('./copter_js/find_humans')(client, pngStream),
+    countHumans = require('./copter_js/count_humans')(pngStream,twitter),
     server = require('./web_server')();
 
 client.config('general:navdata_demo', 'FALSE');
 var controller = require('./copter_js/dualshock_mapping')({
     client: client,
     say: say,
-    findHumans: findHumans,
 });
 
 // var doneSay = false;
@@ -39,4 +38,21 @@ controller.on('psxButton:press', function() {
         findHumans.setSocket(socket);
         say.setSocket(socket);
     });
+});
+controller.on('l1:press', function() {
+    say('Lets see how many humans i can find.').then(function() {
+        countHumans();
+    });
+});
+
+controller.on('r1:press', function() {
+    say('Lets find some puny humans.').then(function() {
+        findHumans(true);
+    });
+});
+controller.on('triangle:press', function() {
+    findHumans.tweetImage(true);
+});
+controller.on('circle:press', function() {
+    findHumans.tweetImage(false);
 });

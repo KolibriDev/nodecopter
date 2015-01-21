@@ -40,16 +40,6 @@ var setup = function(options) {
             });
         }
     });
-    dualshock.on('l1:press', function() {
-        say('Lets see how many humans i can find.').then(function() {
-            // options.countHumans();
-        });
-    });
-    dualshock.on('r1:press', function() {
-        say('Lets find some puny humans.').then(function() {
-            options.findHumans(true);
-        });
-    });
     dualshock.on('x:press', function() {
         client.stop();
     });
