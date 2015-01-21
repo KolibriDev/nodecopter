@@ -26,9 +26,12 @@ var controller = require('./copter_js/dualshock_mapping')({
 
 // })
 
-// require('dronestatus').listen(server);
 
+var initialized = false;
 controller.on('psxButton:press', function() {
+    if (initialized) { return; }
+    initialized = true;
+    require('dronestatus').listen(server);
     require('dronestream').listen(server, {
         tcpVideoStream: videoStream
     });
