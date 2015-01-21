@@ -120,11 +120,9 @@ var setup = function() {
         }
 
         if (normRotateLeft != 0) {
-            console.log(hrend, 'normRotateLeft', normRotateLeft / 2);
             if (lightTouch) normRotateLeft = normRotateLeft / 2;
             left ? client.clockwise(normRotateLeft) : client.counterClockwise(normRotateLeft);
         } else {
-            console.log(hrend, 'done');
             client.clockwise(normRotateLeft);
             client.counterClockwise(normRotateLeft);
         }

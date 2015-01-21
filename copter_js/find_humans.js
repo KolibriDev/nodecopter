@@ -17,73 +17,57 @@ var findClosest = function(centerX, centerY, faces) {
     }).value();
     return _(a).first();
 }
-var whaiting = 1000;
-var moveSize = 0.2
-var chainMove = function(list, after) {
-    after = after || client;
-    if (list > 0) {
+var waiting = 1;
+var moveSize = 0.3
+var chainMove = function(list) {
+    if (list.length > 0) {
         var action = list.pop();
-        var recurs = after.after(whaiting, function() {
-            if (cmd == "forward") {
-                this.front(moveSize);
-            }
-            // if (cmd == "backward") {
-            //     this.back(0.2);
-            //     setTimeout(function() {
-            //         this.back(0);
-            //     }, excTime);
-            // }
-            if (cmd == "turnRight") {
-                this.clockwise(moveSize);
-            }
-            if (cmd == "turnLeft") {
-                this.counterClockwise(moveSize);
-            }
-            if (cmd == "higher") {
-                this.up(moveSize);
-            }
-            if (cmd == "lower") {
-                this.down(moveSize);
-            }
-        }).after(800, function() {
-            this.stop()
-        });
-        chainMove(list, recurs);
+        if (action == "forward") {
+            client.front(moveSize);
+        }
+        if (action == "backward") {
+            client.back(moveSize);
+        }
+        if (action == "turnRight") {
+            client.clockwise(moveSize);
+        }
+        if (action == "turnLeft") {
+            client.counterClockwise(moveSize);
+        }
+        if (action == "higher") {
+            client.up(moveSize/4);
+        }
+        if (action == "lower") {
+            client.down(moveSize/4);
+        }
+        console.log('done',action);
+        setTimeout(function() {
+            client.stop();
+            console.log('stop start new action');
+            chainMove(list);
+        }, 400);
+    } else {
+        LOCKED = false;
     }
 }
 
 var makeMovement = function(commands) {
-    var comandArray = _.keys(commands);
-    if (comandArray.length > 0) {
-        chainMove(comandArray);
-    } else {
-        LOCKED = false;
-    }
+
 }
 var searchForHuman = function() {
     //TODO
 }
 var LOCKED = false;
 var findTheHumans = function(img, faces) {
-    console.log(LOCKED);
     if (faces.length == 0 || LOCKED) {
         // socket.emit('faces', []);
         return;
     }
     LOCKED = true;
-
-    socket.emit('faces', faces.map(function(face) {
-        return {
-            x: face.x,
-            y: face.y,
-            height: face.height,
-            width: face.width
-        }
-    }));
-    console.log(faces);
+    socket.emit('faces', faces);
     var commands = {};
-    var centerX = img.width / 2;
-    var centerY = img.height / 2;
+    var centerX = img.width() / 2;
+    var centerY = img.height() / 2;
     var offset = 100;
     var currentFace = faces.length > 1 ? findClosest(centerX, centerY, faces) : faces[0];
 
@@ -119,7 +103,14 @@ var findTheHumans = function(img, faces) {
             commands.higher = true;
         }
     }
-    makeMovement(commands);
+    var commandArray = _.keys(commands);
+    console.log('commandArray', commandArray);
+    if (commandArray.length > 0) {
+        chainMove(commandArray);
+    } else {
+        LOCKED = false;
+    }
+
 }
 var gameIsOn = function(ison) {
     gameOn = ison;
@@ -132,11 +123,17 @@ var handleStream = function() {
         if (gameOn) {
             hrend = process.hrtime(hrstart);
             if (hrend[0] >= 1) {
+                // matrix.convertGrayscale();
+                // matrix.save('./dump/big.png');
                 matrix.detectObject(opencvConf, {
-                    ScaleDecreaseFraction: 0.2
+                    ScaleDecreaseFraction: 0.2,
+                    // gray:'',
+                    scaleFactor: 1.1,
+                    minNeighbors: 5,
+                    min:[70,70],
                 }, function(err, matches) {
-                    if(matches.length > 0){
-                        findTheHumans(matrix,matches)
+                    if (matches.length > 0) {
+                        findTheHumans(matrix, matches)
                     }
                 })
                 hrstart = process.hrtime();
