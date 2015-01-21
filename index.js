@@ -4,6 +4,8 @@ var arDrone = require('ar-drone'),
     pngStream = client.getPngStream(),
     videoStream = client.getVideoStream(),
     findHumans = require('./copter_js/find_humans')(client, pngStream),
+    twitterConf = require('./twitter.conf.json')
+    twitter = require('./copter_js/twitter')(twitterConf),
     // countHumans = require('./copter_js/count_humans')(pngStream),
     server = require('./web_server')();
 

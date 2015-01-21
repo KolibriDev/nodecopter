@@ -23,6 +23,7 @@
     "dualshock-controller": "^0.6.7",
     "express": "^3.19.0",
     "nan": "^1.3.0",
+    "node-twitter": "^0.5.2",
     "opencv": "^1.0.0",
     "q": "^1.1.2",
     "socket.io": "^1.2.1",
