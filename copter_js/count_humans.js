@@ -15,7 +15,7 @@ var opencvConf = path.join(hcPath, 'haarcascade_frontalface_alt2.xml');
 
 var countHumans = function() {
     console.log('Counting humans');
-    var nrOfHumans = _.chain(faceArray).countBy().pairs().max(_.last).head().value();
+    var nrOfHumans = _.chain(faceArray).countBy().pairs().max(_.last).head().value() || 0;
     if (!nrOfHumans || nrOfHumans < 1) {
         say('I can\'t seem to find any humans').then(function() {
             say('Should we try again?');

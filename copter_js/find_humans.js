@@ -124,9 +124,9 @@ var handleStream = function() {
                 cv.readImage("./find_tmp.png", function(err, im) {
                     im.detectObject(opencvConf, {
                         ScaleDecreaseFraction: 0.5,
-                        scaleFactor: 1.1,
+                        scaleFactor: 1.05,
                         minNeighbors: 5,
-                        min: [70, 70],
+                        min: [50, 50],
 
                     }, function(err, faces) {
                         if (faces.length > 0) {
