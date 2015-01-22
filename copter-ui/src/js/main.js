@@ -38,6 +38,7 @@
 
       viewmodel: 'viewmodel',
       socketio: 'http://localhost:3000/socket.io/socket.io.js',
+      socket: 'init/socket',
     },
     shim: {
       jquery: { exports: '$' },
@@ -54,6 +55,8 @@
     'init/align',
     'init/dronestream',
     'init/dronestatus',
-    'init/socket',
+    'init/faces',
+    'init/subtitles',
+    'init/moving',
   ]);
 }).call(this);

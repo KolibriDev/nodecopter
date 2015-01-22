@@ -4,19 +4,21 @@ block content
 
   section.section.light
     row.no-gutter
-      column.medium-8: row
-        column(window-height='force:true')
-          div#dronestream
-          canvas#videoOverlay(width="640",height="360")
-        //- column: box.light(window-height='force:true,multiply:0.5')
-          h2 Staða flygildis
-          p
-            icon.circle.fa.fa-plug(drone-lost)
-            icon.circle.fa.fa-plane(drone-flying)
-          #output-state
+      column.small-9(window-height='force:true')
+        div#subtitles
+        div#dronestream
+        canvas#videoOverlay(width="640",height="360")
+      column.small-3: box.dark(window-height='force:true')
+        h2 Staða flygildis
+        p
+          icon.circle.fa.fa-plug(drone-lost)
+          icon.circle.fa.fa-plane(drone-flying)
+        #output-state
+          p Staða rafhlöðu
+          .battery
+            .bar
+        #moving-output
 
-            p Staða rafhlöðu
-            .battery
-              .bar
-      column.medium-4: box.dark(window-height='force:true')
-        #right-output
+  //- #twitterfeed.
+    <a class="twitter-timeline" href="https://twitter.com/kolibriDrone" data-widget-id="558046742781108224">Tweets by @kolibriDrone</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>

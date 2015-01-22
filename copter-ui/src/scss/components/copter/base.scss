@@ -6,16 +6,113 @@
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   margin: auto;
+  margin-top: 20px;
   width: 640px;
   height: 360px;
 }
+#dronestream {
+  background: rgba($color-dark,0.4);
+  z-index: 99;
+}
 #videoOverlay {
-  z-index: 99999999;
+  z-index: 100;
+}
+
+#subtitles {
+  position: absolute;
+  top: 380px; left: 0; right: 0;
+  z-index: 101;
+
+  margin: auto;
+  width: 640px;
+  line-height: 1.2;
+
+  background: rgba($color-dark,0.2);
+  border-top: 1px solid $color-dark;
+
+  // transform: translateY(320px/2 + $spacing);
+
+  text {
+    display: block;
+    padding: $spacing;
+
+    font-family: $font-family-alt;
+    font-size: 80px;
+    text-align: center;
+
+    transition-property: opacity, font-size, line-height, padding;
+    transition-duration: $transition-duration-slower;
+
+    &:nth-child(2n+1) {
+      background: rgba($color-dark,0.1);
+    }
+
+    &.leaving {
+      opacity: 0.5;
+      font-size: 25px;
+      padding: $spacing/2;
+    }
+
+    &.go-away {
+      // opacity: 0;
+      // font-size: 0px;
+      // line-height: 0;
+      // padding: 0px;
+    }
+  }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0); height: 0; }
+  75% { transform: scale(1.2);  }
+  100% { transform: scale(1); height: 80px; }
 }
 
 
-#right-output p {
-  margin-bottom: 0;
+#moving-output {
+  padding: $spacing;
+  border-top: 1px solid $color-light;
+
+  > action {
+    margin: auto auto $spacing;
+    display: block;
+    line-height: 40px;
+
+    opacity: 0.8;
+    font-size: 25px;
+    text-align: center;
+
+    transition-property: opacity, font-size, line-height, color, background;
+    transition-duration: $transition-duration-slower;
+
+    &:before {
+      display: inline-block;
+      padding: 0 $spacing;
+      width: 60px;
+      height: 40px;
+      color: $color-light;
+      background: rgba(black,0.25);
+      box-shadow: 0 1px 0 rgba(black,0.2);
+      border-radius: 2px;
+
+      transition-property: width, height;
+      transition-duration: $transition-duration-slower;
+    }
+
+    &:first-child {
+      font-size: 50px;
+      line-height: 75px;
+
+
+      &:before {
+        animation: 500ms bounceIn 1;
+        width: 100px;
+        height: 80px;
+        background: $color-light;
+        color: $color-dark;
+      }
+    }
+  }
 }
 
 .battery {
@@ -29,5 +126,17 @@
     width: 0%;
     height: 100%;
     background: $color-alert-green;
+  }
+}
+
+#twitterfeed {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  z-index: 999;
+
+  iframe {
+    float: right;
   }
 }
