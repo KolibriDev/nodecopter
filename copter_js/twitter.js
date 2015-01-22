@@ -32,7 +32,7 @@ function status(text) {
 }
 
 module.exports = function(options) {
-    var twitterRestClient = new Twitter.RestClient(
+    twitterRestClient = new Twitter.RestClient(
         options.CONSUMER_KEY,
         options.CONSUMER_SECRET,
         options.TOKEN,

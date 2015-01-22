@@ -1,0 +1,22 @@
+define(['jquery', 'socket', 'underscore'], function($, socket, _) {
+    var canvas = document.getElementById('videoOverlay');
+    var context = canvas.getContext('2d');
+    console.log('canvas: ', canvas);
+    var dirty = false;
+    socket.on('faces', function(faces) {
+        if (dirty) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            dirty = false;
+        }
+        _(faces).each(function(face) {
+            dirty = true;
+            console.log('face: ', face);
+            context.globalAlpha = 0.5;
+            context.beginPath();
+            context.arc(face.x + face.width / 2, face.y + face.width / 2, face.width / 2, 0, 2 * Math.PI, true);
+            context.lineWidth = 2;
+            context.strokeStyle = 'red';
+            context.stroke();
+        });
+    });
+});

@@ -15,43 +15,16 @@ var controller = require('./copter_js/dualshock_mapping')({
     client: client,
     say: say,
 });
-
-// var doneSay = false;
-// videoStream.on('error', function(err) {
-//     if (!doneSay) {
-//         say('Ohh dear, it seems like i have lost my sight.').then(function() {
-//             say('Trying to reconnect to video stream');
-//         })
-//         doneSay = true;
-//     }
-
-// })
-
-
-var initialized = false;
-controller.on('psxButton:press', function() {
-    if (initialized) { return; }
-    initialized = true;
-    require('dronestatus').listen(server);
-    require('dronestream').listen(server, {
-        tcpVideoStream: videoStream
-    });
-
-    var io = require('socket.io')(server);
-    io.on('connection', function(socket) {
-        findHumans.setSocket(socket);
-        say.setSocket(socket);
-    });
+require('dronestatus').listen(server);
+require('dronestream').listen(server, {
+    tcpVideoStream: videoStream
 });
-// say('Lets see how many humans i can find.').then(function() {
-//         countHumans.gameIsOn(true);
-//         findHumans.gameIsOn(false);
-//         console.log('then done');
-//         setTimeout(function() {
-//             console.log('start it');
-//             countHumans();
-//         }, 2000);
-//     });
+var io = require('socket.io')(server);
+io.on('connection', function(socket) {
+    findHumans.setSocket(socket);
+    say.setSocket(socket);
+});
+
 controller.on('l1:press', function() {
     say('Lets see how many humans i can find.').then(function() {
         console.log('then done');
@@ -61,8 +34,7 @@ controller.on('l1:press', function() {
         setTimeout(function() {
             console.log('how many?')
             countHumans.howMany();
-
-        }, 2000);
+        }, 5000);
     }, function(err) {
         console.log(err);
     }).fail(function(err) {
@@ -75,6 +47,10 @@ controller.on('r1:press', function() {
         findHumans.gameIsOn(true);
         countHumans.gameIsOn(false);
     });
+});
+
+controller.on('r2:release', function() {
+    countHumans.triggerTakeSingle();
 });
 controller.on('triangle:press', function() {
     countHumans.tweetImage(true);

@@ -5,7 +5,6 @@ var dualShockCtrl = require('dualshock-controller'),
     dualshock = dualShockCtrl({
         config: 'dualshock4-generic-driver'
     }),
-    controllerConfiguration = require('./dualshock4-generic-driver'),
     stickMaxPos = 128,
     stickMaxNeg = -127,
     // triggerMax = 255,
@@ -13,7 +12,8 @@ var dualShockCtrl = require('dualshock-controller'),
     initialized = false,
     calibrating = true;
 
-    // require('./consolePrintControllerEvents')(dualshock,controllerConfiguration);
+// var controllerConfiguration = require('./dualshock4-generic-driver');
+// require('./consolePrintControllerEvents')(dualshock,controllerConfiguration);
 var setup = function(options) {
     var client = options.client;
     var say = options.say;
@@ -33,18 +33,27 @@ var setup = function(options) {
             }).after(5000, function() {
                 console.log('end calibration');
                 calibrating = false;
-                setup();
-            });
-            client.after(1000, function() {
-                client.calibrate(0);
             });
         }
     });
     dualshock.on('x:press', function() {
-        client.stop();
+        calibrating = true;
+        say('Lets dance');
+        client.animate('phiDance',2000);
+        setTimeout(function() {
+            calibrating = false;
+        },5000);
     });
     dualshock.on('square:press', function() {
+        calibrating = true;
+        console.log('start calibration');
+        say('Calibrating');
         client.calibrate(0);
+        client.after(5000, function() {
+            console.log('end calibration');
+            calibrating = false;
+            say('Done calibrating');
+        });
     });
     dualshock.on('options:press', function() {
         lightTouch = !lightTouch;
@@ -179,14 +188,20 @@ module.exports = function(_options) {
         if (initialized) {
             _options.client.stop();
             _options.client.land();
-            _options.say('Well, that was fun. I suppose. Goodbye for now.').then(function(){
-                process.exit(0);
+            _options.say('Well, that was fun').then(function(){
+                _options.say('I suppose').then(function(){
+                    _options.say('Goodbye, for now').then(function(){
+                        process.exit(0);
+                    });
+                });
             });
         } else {
             initialized = true;
-            _options.say('Hi, let\'s play some games.').then(function() {
-                _options.say('Press the touch pad for takeoff.').then(function() {
-                    setup(_options);
+            _options.say('Hi, my name happens to be Molly').then(function() {
+                _options.say('To take me for a spin,').then(function() {
+                    _options.say('press the touch pad once with enthusiasm').then(function() {
+                        setup(_options);
+                    });
                 });
             });
         }

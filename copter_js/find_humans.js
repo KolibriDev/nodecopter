@@ -20,8 +20,9 @@ var findClosest = function(centerX, centerY, faces) {
 var waiting = 1;
 var moveSize = 0.3
 var chainMove = function(list) {
-    if (list.length > 0) {
+    if (list.length > 0 && gameOn) {
         var action = list.pop();
+        socket.emit('moving', action);
         if (action == "forward") {
             client.front(moveSize);
         }
@@ -51,16 +52,12 @@ var chainMove = function(list) {
     }
 }
 
-var makeMovement = function(commands) {
-
-}
 var searchForHuman = function() {
     //TODO
 }
 var LOCKED = false;
 var findTheHumans = function(img, faces) {
     if (faces.length == 0 || LOCKED) {
-        // socket.emit('faces', []);
         return;
     }
     LOCKED = true;
@@ -75,16 +72,15 @@ var findTheHumans = function(img, faces) {
         commands.forward = true;
     } else {
         LOCKED = true;
+        gameIsOn(false);
         say('hello human.').then(function() {
-            client.after(1000, function() {
-                client.back(0.3)
-            }).after(1000, function() {
-                client.back(0);
-                client.clockwise(0.5);
-            }).after(1000, function() {
-                client.clockwise(0);
+            img.save('./human_found/humanfound'+imgCount+'.jpg');
+            imgCount++;
+            client.animate('phiDance',2000);
+            setTimeout(function() {
+                client.stop();
                 LOCKED = false;
-            });
+            },2000);
         })
     }
     var diffX = centerX - currentFace.x;
@@ -114,7 +110,6 @@ var findTheHumans = function(img, faces) {
 }
 var gameIsOn = function(ison) {
     gameOn = ison;
-    // pngStream.on('data', handleStream);
 }
 
 var handleStream = function() {
@@ -122,14 +117,13 @@ var handleStream = function() {
     s.on('data', function(matrix) {
         if (gameOn) {
             hrend = process.hrtime(hrstart);
-            if (hrend[0] >= 1) {
-                // matrix.convertGrayscale();
-                // matrix.save('./dump/big.png');
+            if (hrend[0] >= 2) {
+                matrix.convertGrayscale();
                 matrix.save('find_tmp.png');
 
                 cv.readImage("./find_tmp.png", function(err, im) {
                     im.detectObject(opencvConf, {
-                        ScaleDecreaseFraction: 0.2,
+                        ScaleDecreaseFraction: 0.5,
                         scaleFactor: 1.1,
                         minNeighbors: 5,
                         min: [70, 70],
@@ -142,20 +136,6 @@ var handleStream = function() {
                     });
                 })
 
-
-
-
-                // matrix.detectObject(opencvConf, {
-                //     ScaleDecreaseFraction: 0.2,
-                //     // gray:'',
-                //     scaleFactor: 1.1,
-                //     minNeighbors: 5,
-                //     min:[70,70],
-                // }, function(err, matches) {
-                //     if (matches.length > 0) {
-                //         findTheHumans(matrix, matches)
-                //     }
-                // })
                 hrstart = process.hrtime();
             }
         }
